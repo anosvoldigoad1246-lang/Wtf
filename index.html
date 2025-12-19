@@ -1,1 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Sadia | My Love</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <style>
+        :root {
+            --primary: #ff3366;
+            --secondary: #ff85a2;
+            --bg: #0a0a0c;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Ambient Background Particles */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #1a0b12 0%, #0a0a0c 100%);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            opacity: 0;
+            visibility: hidden;
+            padding: 40px;
+            border-radius: 30px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Intro Section */
+        #intro {
+            text-align: center;
+            flex-direction: column;
+            background: none;
+            border: none;
+            backdrop-filter: none;
+        }
+
+        .heart-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.3s ease;
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .heart-icon {
+            font-size: 80px;
+            filter: drop-shadow(0 0 20px var(--primary));
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .click-text {
+            margin-top: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            text-transform: uppercase;
+        }
+
+        /* Content Styling */
+        .photo-frame {
+            width: 45%;
+            height: 80%;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-content {
+            width: 45%;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+        }
+
+        .next-btn {
+            padding: 15px 40px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .next-btn:hover {
+            background: #ff4d7d;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+            }
+            .photo-frame, .text-content {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            h1 { font-size: 2rem; }
+            .container { height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <div class="container">
+        <!-- Slide 0: The Hook -->
+        <div id="intro" class="slide active">
+            <button class="heart-btn" onclick="startJourney()">
+                <div class="heart-icon">💋</div>
+            </button>
+            <div class="click-text">Click my heart baby</div>
+        </div>
+
+        <!-- Slide 1: The Beauty -->
+        <div id="slide1" class="slide">
+            <div class="photo-frame">
+                <!-- If photo1.jpg doesn't exist, it shows a placeholder -->
+                <img src="photo1.jpg" alt="Sadia" onerror="this.src='https://images.unsplash.com/photo-1518893063132-36e46dbe2498?auto=format&fit=crop&w=800&q=80'">
+            </div>
+            <div class="text-content">
+                <h1>To My Beautiful Sadia...</h1>
+                <p>Today is more than just a date on the calendar; it's a celebration of the most incredible woman I know. Your smile brightens my darkest days and your love is the anchor of my life.</p>
+                <button class="next-btn" onclick="nextSlide(2)">Keep Going →</button>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Finale -->
+        <div id="slide2" class="slide">
+            <div class="text-content">
+                <h1>Happy Birthday, My Queen</h1>
+                <p>May this year be as radiant and wonderful as you are. I promise to hold your hand through every adventure and love you more with every heartbeat. Happy Birthday, Sadia!</p>
+                <button class="next-btn" onclick="celebrate()">Celebrate You 🥂</button>
+            </div>
+            <div class="photo-frame">
+                <img src="photo2.jpg" alt="Sadia Love" onerror="this.src='https://images.unsplash.com/photo-1516589174184-c68526614af5?auto=format&fit=crop&w=800&q=80'">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particles Background Logic
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speed = Math.random() * 0.5 + 0.2;
+                this.opacity = Math.random() * 0.5;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < 0) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 51, 102, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        for(let i=0; i<100; i++) particles.push(new Particle());
+        animateParticles();
+
+        // Navigation Logic
+        function startJourney() {
+            gsap.to("#intro", {
+                duration: 1,
+                y: -100,
+                opacity: 0,
+                onComplete: () => {
+                    document.getElementById('intro').style.display = 'none';
+                    showSlide("#slide1");
+                }
+            });
+        }
+
+        function nextSlide(num) {
+            gsap.to("#slide1", {
+                duration: 1,
+                scale: 0.8,
+                opacity: 0,
+                onComplete: () => {
+                    document.getElementById('slide1').style.display = 'none';
+                    showSlide("#slide2");
+                }
+            });
+        }
+
+        function showSlide(id) {
+            const el = document.querySelector(id);
+            el.style.visibility = 'visible';
+            gsap.fromTo(id, 
+                { opacity: 0, y: 50, scale: 0.9 },
+                { duration: 1.2, opacity: 1, y: 0, scale: 1, ease: "power4.out" }
+            );
+        }
+
+        function celebrate() {
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+              const timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              const particleCount = 50 * (timeLeft / duration);
+              confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+              confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+            }, 250);
+
+            gsap.to(".next-btn", { scale: 1.2, duration: 0.2, yoyo: true, repeat: 1 });
+        }
+    </script>
+</body>
+</html>
